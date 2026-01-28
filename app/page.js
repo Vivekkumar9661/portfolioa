@@ -10,6 +10,8 @@ export default function BirthdayCard() {
   const [sparkles, setSparkles] = useState([]);
   const [fireworks, setFireworks] = useState([]);
   const [photo, setPhoto] = useState(null);
+  const [screen, setScreen] = useState({ width: 1000, height: 800 });
+
   const audioRef = useRef(null);
 
   // 🎵 Play music when opened
@@ -19,6 +21,16 @@ export default function BirthdayCard() {
       audioRef.current.play().catch(() => {});
     }
   }, [open]);
+
+  // 📱 Detect screen size safely (SSR Safe)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setScreen({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+  }, []);
 
   // ❤️ Effects on open
   useEffect(() => {
@@ -59,7 +71,7 @@ export default function BirthdayCard() {
   // 🔗 Share
   const shareCard = () => {
     const text = "🎉 Happy Birthday Vishal 🎂 Check this animated card!";
-    const url = window.location.href;
+    const url = typeof window !== "undefined" ? window.location.href : "";
 
     if (navigator.share) {
       navigator.share({ title: "Birthday Card", text, url });
@@ -103,6 +115,7 @@ export default function BirthdayCard() {
         >
           📱 Fullscreen
         </button>
+
         <button
           onClick={shareCard}
           className="bg-white px-3 py-1 rounded text-sm"
@@ -118,142 +131,40 @@ export default function BirthdayCard() {
           <AnimatePresence>
             {page2 && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.85, rotateX: -15 }}
-                animate={{ opacity: 1, scale: 1, rotateX: 0 }}
-                transition={{ duration: 0.9, ease: "easeOut" }}
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.9 }}
                 className="absolute inset-0 rounded-3xl shadow-2xl flex flex-col items-center justify-center p-5 text-center bg-gradient-to-br from-[#12002b] via-[#3a0ca3] to-[#7209b7]"
               >
-                {/* Neon Glow Ring */}
-                <motion.div
-                  animate={{
-                    boxShadow: [
-                      "0 0 10px #ff77ff",
-                      "0 0 35px #ff77ff",
-                      "0 0 10px #ff77ff",
-                    ],
-                  }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                  className="absolute inset-2 rounded-3xl border border-white/20"
-                />
-
-                {/* Photo */}
                 {photo && (
-                  <motion.img
-                    initial={{ scale: 0.7, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.8 }}
+                  <img
                     src={photo}
                     alt="Vishal"
-                    className="relative z-10 w-36 h-36 object-cover rounded-full mb-3 border-4 border-pink-400 shadow-xl"
+                    className="w-36 h-36 object-cover rounded-full mb-3 border-4 border-pink-400 shadow-xl"
                   />
                 )}
 
-                {/* Animated Name */}
                 <motion.h2
-                  animate={{
-                    y: [0, -8, 0],
-                    textShadow: [
-                      "0 0 5px #ffffff",
-                      "0 0 25px #ff4dff",
-                      "0 0 5px #ffffff",
-                    ],
-                  }}
-                  transition={{ repeat: Infinity, duration: 1.6 }}
-                  className="relative z-10 text-4xl font-extrabold text-white mb-1 tracking-wide"
+                  animate={{ y: [0, -10, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.5 }}
+                  className="text-4xl font-extrabold text-white mb-2"
                 >
                   🎉 Vishal 🎉
                 </motion.h2>
 
-                {/* Shimmer Message */}
-                <motion.p
-                  animate={{ opacity: [0.7, 1, 0.7] }}
-                  transition={{ repeat: Infinity, duration: 2.2 }}
-                  className="relative z-10 text-white/95 text-base mb-4 leading-relaxed"
-                >
-                  🎂 Wishing you a year filled with endless smiles, big dreams,
-                  glowing success and beautiful memories. May every day bring
-                  you new reasons to celebrate and shine brighter than ever!
-                  🌟💖
-                </motion.p>
+                <p className="text-white text-sm mb-3">
+                  Wishing you a year filled with endless smiles, glowing
+                  success, and the most beautiful memories life can offer. May
+                  every day of your life shine as brightly as your heart does,
+                  and may happiness follow you wherever you go. You deserve all
+                  the good things this world has to give — love that feels safe,
+                  success that makes you proud, and moments that turn into
+                  unforgettable memories.
+                </p>
 
-                {/* 🎉 Corner Emoji Bursts */}
-                <motion.div
-                  animate={{
-                    x: [0, 80, 140],
-                    y: [0, -60, -120],
-                    opacity: [1, 1, 0],
-                  }}
-                  transition={{ repeat: Infinity, duration: 3 }}
-                  className="absolute top-3 left-3 text-2xl"
-                >
-                  🎈🎉
-                </motion.div>
-
-                <motion.div
-                  animate={{
-                    x: [0, -80, -140],
-                    y: [0, -60, -120],
-                    opacity: [1, 1, 0],
-                  }}
-                  transition={{ repeat: Infinity, duration: 3.2 }}
-                  className="absolute top-3 right-3 text-2xl"
-                >
-                  🎊✨
-                </motion.div>
-
-                <motion.div
-                  animate={{
-                    x: [0, 90, 150],
-                    y: [0, 70, 130],
-                    opacity: [1, 1, 0],
-                  }}
-                  transition={{ repeat: Infinity, duration: 3.1 }}
-                  className="absolute bottom-3 left-3 text-2xl"
-                >
-                  🎁💫
-                </motion.div>
-
-                <motion.div
-                  animate={{
-                    x: [0, -90, -150],
-                    y: [0, 70, 130],
-                    opacity: [1, 1, 0],
-                  }}
-                  transition={{ repeat: Infinity, duration: 3.3 }}
-                  className="absolute bottom-3 right-3 text-2xl"
-                >
-                  🎆🥳
-                </motion.div>
-
-                {/* Premium CTA */}
-                <motion.button
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="relative z-10 mt-2 px-6 py-2 rounded-full bg-gradient-to-r from-pink-400 to-yellow-400 text-black font-semibold shadow-lg"
-                >
+                <button className="px-6 py-2 rounded-full bg-gradient-to-r from-pink-400 to-yellow-400 text-black font-semibold">
                   🎁 Best Wishes
-                </motion.button>
-
-                {/* Floating Mini Sparkles */}
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <motion.div
-                    key={`mini-${i}`}
-                    initial={{ x: 0, y: 0, opacity: 0 }}
-                    animate={{
-                      x: Math.random() * 220 - 110,
-                      y: Math.random() * 220 - 110,
-                      opacity: [0, 1, 0],
-                    }}
-                    transition={{
-                      duration: 2 + Math.random(),
-                      repeat: Infinity,
-                      delay: i * 0.2,
-                    }}
-                    className="absolute text-yellow-300"
-                  >
-                    ✨
-                  </motion.div>
-                ))}
+                </button>
               </motion.div>
             )}
           </AnimatePresence>
@@ -337,7 +248,7 @@ export default function BirthdayCard() {
           ))}
       </AnimatePresence>
 
-      {/* 🎆 Fireworks */}
+      {/* 🎆 Fireworks (Vercel Safe) */}
       <AnimatePresence>
         {open &&
           fireworks.map((id) => (
@@ -352,8 +263,8 @@ export default function BirthdayCard() {
               }}
               className="absolute w-3 h-3 rounded-full bg-white"
               style={{
-                left: Math.random() * window.innerWidth,
-                top: Math.random() * window.innerHeight,
+                left: Math.random() * screen.width,
+                top: Math.random() * screen.height,
               }}
             />
           ))}
